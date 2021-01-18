@@ -13,10 +13,12 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
 
   final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
 
   //text field state
   String email='';
   String password='';
+  String error = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +29,9 @@ class _RegisterState extends State<Register> {
           title: Text('Sign Up to Brew Crew'),
             actions: [
               FlatButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    widget.toggleView();
+                  },
                   icon: Icon(Icons.person),
                   label: Text('Sign In'))
             ]
@@ -35,10 +39,12 @@ class _RegisterState extends State<Register> {
         body:  Container(
             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
             child: Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     SizedBox(height: 20.0,),
                     TextFormField(
+                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
                       onChanged: (val) {
                         setState(() {
                           email = val;
@@ -51,6 +57,7 @@ class _RegisterState extends State<Register> {
                     SizedBox(height: 20.0,),
                     TextFormField(
                       obscureText: true,
+                      validator: (val) => val.length < 6 ? "Password must be atleast 7 characters" : null,
                       onChanged: (val) {
                         setState(() {
                           password = val;
@@ -63,8 +70,12 @@ class _RegisterState extends State<Register> {
                     SizedBox(height: 20.0,),
                     RaisedButton(
                       onPressed: () async{
-                        print(email);
-                        print(password);
+                        if (_formKey.currentState.validate()) {
+                          dynamic result = await  _auth.registerWithEmailAndPassword( email, password);
+                          if(result == null){
+                              setState(() => error = 'please supply a valid email');
+                          }
+                        }
                       },
                       color: Colors.brown[800],
                       child: Text(
@@ -73,7 +84,15 @@ class _RegisterState extends State<Register> {
                           color: Colors.white,
                         ),
                       ),
+                    ),
+                    SizedBox(height: 12.0),
+                    Text(
+                      error,
+                      style: TextStyle(
+                        color: Colors.red,
                     )
+                    )
+
                   ],
 
                 )
