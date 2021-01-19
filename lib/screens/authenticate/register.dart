@@ -1,3 +1,4 @@
+import 'package:brew_crew/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:brew_crew/services/auth.dart';
 
@@ -50,9 +51,7 @@ class _RegisterState extends State<Register> {
                           email = val;
                         });
                       },
-                    decoration: InputDecoration(
-                        hintText: 'Email'
-                    )
+                      decoration: textFormField.copyWith(hintText: "Email"),
                     ),
                     SizedBox(height: 20.0,),
                     TextFormField(
@@ -63,9 +62,7 @@ class _RegisterState extends State<Register> {
                           password = val;
                         });
                       },
-                      decoration: InputDecoration(
-                        hintText: 'Password'
-                      )
+                      decoration: textFormField.copyWith(hintText: "Password"),
                     ),
                     SizedBox(height: 20.0,),
                     RaisedButton(

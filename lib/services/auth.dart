@@ -17,6 +17,20 @@ class AuthService {
           .map(_userFromFirebaseUser);// same as the above commented
   }
 
+  //A method for signIn using email and password
+  Future signInWithEmailAndPassword(String email, String password) async {
+    try{
+      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      User user = result.user;
+      return _userFromFirebaseUser(user);
+    }catch(e){
+      print(e.toString());
+      return null;
+    }
+  }
+
+
+
 
   //A method for signIn anonymously
   Future signInAnon() async{
