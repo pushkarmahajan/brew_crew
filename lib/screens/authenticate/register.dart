@@ -1,4 +1,5 @@
 import 'package:brew_crew/shared/constants.dart';
+import 'package:brew_crew/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:brew_crew/services/auth.dart';
 
@@ -20,9 +21,11 @@ class _RegisterState extends State<Register> {
   String email='';
   String password='';
   String error = '';
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading? Loading(): Scaffold(
         backgroundColor: Colors.brown[100],
         appBar: AppBar(
           backgroundColor: Colors.brown[400],
@@ -68,9 +71,14 @@ class _RegisterState extends State<Register> {
                     RaisedButton(
                       onPressed: () async{
                         if (_formKey.currentState.validate()) {
+                          setState(() {
+                            loading = true;
+                          });
                           dynamic result = await  _auth.registerWithEmailAndPassword( email, password);
                           if(result == null){
-                              setState(() => error = 'please supply a valid email');
+                              setState(() {error = 'please supply a valid email';
+                              loading = false;
+                              });
                           }
                         }
                       },
