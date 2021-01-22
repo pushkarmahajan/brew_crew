@@ -1,4 +1,5 @@
 import 'package:brew_crew/models/user.dart';
+import 'package:brew_crew/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -10,7 +11,7 @@ class AuthService {
     return user != null ? CusUser(uid : user.uid ) : null;
   }
 
-  // auth change user system
+  //stream for  auth changes in  user system
   Stream<CusUser> get user{
     return _auth.authStateChanges()
         // .map((User user) => _userFromFirebaseUser(user));
@@ -49,6 +50,7 @@ class AuthService {
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User user = result.user;
+      await DatabaseService(uid: user.uid).updateUserData("2 cubes", " pushkar ", 100 );
       return _userFromFirebaseUser(user);
     }catch(e){
       print(e.toString());
